@@ -6,22 +6,20 @@ public class ExecutionVisitor implements CommandVisitor {
 
     @Override
     public void visit(MoveForwardCommand command) {
-        context.movePointerForward();
+        context.movePointer(1);
     }
 
     @Override
-    public void visit(MoveBackwardCommand command) {
-        context.movePointerBackward();
-    }
+    public void visit(MoveBackwardCommand command) { context.movePointer(-1); }
 
     @Override
     public void visit(IncrementCommand command) {
-        context.incrementCurrentValue();
+        context.addToCurrentValue(1);
     }
 
     @Override
     public void visit(DecrementCommand command) {
-        context.decrementCurrentValue();
+        context.addToCurrentValue(-1);
     }
 
     @Override
@@ -37,5 +35,11 @@ public class ExecutionVisitor implements CommandVisitor {
             }
         }
     }
+
+    @Override
+    public void visit(AddCommand command){ context.addToCurrentValue(command.getAddNum()); }
+
+    @Override
+    public void visit(MoveCommand command){ context.movePointer(command.getMoveNum()); }
 
 }

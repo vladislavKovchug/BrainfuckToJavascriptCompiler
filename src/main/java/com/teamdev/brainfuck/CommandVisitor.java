@@ -14,4 +14,8 @@ public interface CommandVisitor {
 
     void visit(LoopCommand command);
 
+    void visit(AddCommand command);
+
+    void visit(MoveCommand command);
+
 }

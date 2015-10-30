@@ -2,6 +2,9 @@ package com.teamdev.brainfuck;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 public class JavaScriptCompiler {
@@ -29,7 +32,19 @@ public class JavaScriptCompiler {
            command.accept(executionVisitor);
        }
 
-       // todo: generate JavaScript code (implement JavaScript code generation visitor)
+       final JavaScriptCompilerVisitor javaScriptCompilerVisitor = new JavaScriptCompilerVisitor();
+       for (Command command : optimizedCommands) {
+           command.accept(javaScriptCompilerVisitor);
+       }
+
+       try {
+           outputJavaScriptFile.createNewFile();
+           PrintWriter writer = new PrintWriter(outputJavaScriptFile);
+           writer.println(javaScriptCompilerVisitor.getJavaScript());
+           writer.close();
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
 
    }
 

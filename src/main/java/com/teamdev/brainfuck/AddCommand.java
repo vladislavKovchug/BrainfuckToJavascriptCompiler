@@ -1,7 +1,20 @@
 package com.teamdev.brainfuck;
 
-/**
- * Created by vladislav.kovchug on 10/30/2015.
- */
 public class AddCommand implements Command {
+
+    private int addNum;
+
+    public AddCommand(int num){
+        addNum = num;
+    }
+
+    public int getAddNum() {
+        return addNum;
+    }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
+
 }

@@ -7,32 +7,19 @@ public class ExecutionContext {
     private final byte[] memory = new byte[MEMORY_SIZE];
     private int pointer;
 
-    public void movePointerForward() {
-        pointer++;
-
-        if (pointer >= MEMORY_SIZE) {
+    public void movePointer(int num){
+        pointer += num;
+        if(pointer >= MEMORY_SIZE || pointer < 0){
             throw new IllegalStateException("Pointer is out of memory: " + pointer);
         }
     }
 
-    public void movePointerBackward() {
-        pointer--;
-
-        if (pointer < 0) {
-            throw new IllegalStateException("Pointer is out of memory: " + pointer);
-        }
+    public void addToCurrentValue(int num){
+        memory[pointer] += num;
     }
+
 
     public byte getCurrentValue() {
         return memory[pointer];
     }
-
-    public void incrementCurrentValue() {
-        memory[pointer]++;
-    }
-
-    public void decrementCurrentValue() {
-        memory[pointer]--;
-    }
-
 }

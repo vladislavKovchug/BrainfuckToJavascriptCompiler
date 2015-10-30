@@ -1,7 +1,19 @@
 package com.teamdev.brainfuck;
 
-/**
- * Created by vladislav.kovchug on 10/30/2015.
- */
 public class MoveCommand implements Command {
+
+    private int moveNum;
+
+    public MoveCommand(int num){
+        moveNum = num;
+    }
+
+    public int getMoveNum() {
+        return moveNum;
+    }
+
+    @Override
+    public void accept(CommandVisitor visitor) {
+        visitor.visit(this);
+    }
 }
