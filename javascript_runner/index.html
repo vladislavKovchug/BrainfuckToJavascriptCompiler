@@ -1,0 +1,21 @@
+<html>
+<head>
+
+<script src="brainfuck.js"></script>
+<script>
+function test(){
+	var text = payload();
+	console.log(text);
+	alert(text);
+	document.getElementById('text').innerHTML = text;
+}
+</script>
+
+</head>
+<body>
+
+<button onclick="test()">Click Me</button><br><br>
+<div id="text"></div>
+
+</body>
+</html>
