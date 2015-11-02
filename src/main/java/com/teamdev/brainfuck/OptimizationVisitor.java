@@ -6,48 +6,30 @@ import java.util.Deque;
 import java.util.List;
 
 public class OptimizationVisitor implements CommandVisitor {
-    private static final int COMMAND_NONE = 0;
-    private static final int COMMAND_ADD = 1;
-    private static final int COMMAND_MOVE = 2;
-
-
-    //private final List<Command> optimizedCommands = new ArrayList<>();
     private final Deque<List<Command>> optimizedCommandsStack = new ArrayDeque<>();
 
     private int optimizingCommandsCount;
-    private int currentOptimizingCommandType;
-    private int currentOptimizingAddValue;
-    private Command currentOptimizingCommand;
+    private Command lastCommand;
+    private OptimizableCommand currentOptimizingCommand;
 
 
     public OptimizationVisitor() {
-        currentOptimizingCommandType = COMMAND_NONE;
-        currentOptimizingAddValue = 0;
+        optimizingCommandsCount = 0;
+        currentOptimizingCommand = null;
+        lastCommand = null;
         optimizedCommandsStack.push(new ArrayList<Command>());
     }
 
-    private Command makeOptimizedCommand() {
-        if (currentOptimizingCommandType == COMMAND_ADD) {
-            return new AddCommand(currentOptimizingAddValue);
-        } else {
-            return new MoveCommand(currentOptimizingAddValue);
-        }
-
-    }
-
     private void pushOptimizedCommand() {
-        if (currentOptimizingCommandType != COMMAND_NONE) {
-            if (optimizingCommandsCount > 1) {
-                optimizedCommandsStack.peek().add(makeOptimizedCommand());
-            } else if (optimizingCommandsCount == 1) {
-                optimizedCommandsStack.peek().add(currentOptimizingCommand);
-            }
+        if (optimizingCommandsCount > 1) {
+            optimizedCommandsStack.peek().add(currentOptimizingCommand);
+        } else if (optimizingCommandsCount == 1) {
+            optimizedCommandsStack.peek().add(lastCommand);
         }
 
         optimizingCommandsCount = 0;
         currentOptimizingCommand = null;
-        currentOptimizingCommandType = COMMAND_NONE;
-        currentOptimizingAddValue = 0;
+        lastCommand = null;
     }
 
     public List<Command> getOptimizedCommands() {
@@ -56,45 +38,67 @@ public class OptimizationVisitor implements CommandVisitor {
 
     @Override
     public void visit(MoveForwardCommand command) {
-        if (currentOptimizingCommandType != COMMAND_MOVE) {
+        if(currentOptimizingCommand == null || !currentOptimizingCommand.compatible(command)){
             pushOptimizedCommand();
-            currentOptimizingCommandType = COMMAND_MOVE;
-            currentOptimizingCommand = command;
+            currentOptimizingCommand = new MoveCommand();
         }
-        currentOptimizingAddValue++;
+        lastCommand = command;
+        currentOptimizingCommand.changeValue(+1);
         optimizingCommandsCount++;
     }
 
     @Override
     public void visit(MoveBackwardCommand command) {
-        if (currentOptimizingCommandType != COMMAND_MOVE) {
+        if(currentOptimizingCommand == null || !currentOptimizingCommand.compatible(command)){
             pushOptimizedCommand();
-            currentOptimizingCommandType = COMMAND_MOVE;
-            currentOptimizingCommand = command;
+            currentOptimizingCommand = new MoveCommand();
         }
-        currentOptimizingAddValue--;
+        lastCommand = command;
+        currentOptimizingCommand.changeValue(-1);
+        optimizingCommandsCount++;
+    }
+
+    @Override
+    public void visit(MoveCommand command) {
+        if(currentOptimizingCommand == null || !currentOptimizingCommand.compatible(command)){
+            pushOptimizedCommand();
+            currentOptimizingCommand = new MoveCommand();
+        }
+        lastCommand = command;
+        currentOptimizingCommand.changeValue(command.getMoveNum());
         optimizingCommandsCount++;
     }
 
     @Override
     public void visit(IncrementCommand command) {
-        if (currentOptimizingCommandType != COMMAND_ADD) {
+        if(currentOptimizingCommand == null || !currentOptimizingCommand.compatible(command)){
             pushOptimizedCommand();
-            currentOptimizingCommandType = COMMAND_ADD;
-            currentOptimizingCommand = command;
+            currentOptimizingCommand = new AddCommand();
         }
-        currentOptimizingAddValue++;
+        lastCommand = command;
+        currentOptimizingCommand.changeValue(+1);
         optimizingCommandsCount++;
     }
 
     @Override
     public void visit(DecrementCommand command) {
-        if (currentOptimizingCommandType != COMMAND_ADD) {
+        if(currentOptimizingCommand == null || !currentOptimizingCommand.compatible(command)){
             pushOptimizedCommand();
-            currentOptimizingCommandType = COMMAND_ADD;
-            currentOptimizingCommand = command;
+            currentOptimizingCommand = new AddCommand();
         }
-        currentOptimizingAddValue--;
+        lastCommand = command;
+        currentOptimizingCommand.changeValue(-1);
+        optimizingCommandsCount++;
+    }
+
+    @Override
+    public void visit(AddCommand command) {
+        if(currentOptimizingCommand == null || !currentOptimizingCommand.compatible(command)){
+            pushOptimizedCommand();
+            currentOptimizingCommand = new AddCommand();
+        }
+        lastCommand = command;
+        currentOptimizingCommand.changeValue(command.getAddNum());
         optimizingCommandsCount++;
     }
 
@@ -117,17 +121,4 @@ public class OptimizationVisitor implements CommandVisitor {
         LoopCommand loop = new LoopCommand(optimizedCommandsStack.pop());
         optimizedCommandsStack.peek().add(loop);
     }
-
-    @Override
-    public void visit(AddCommand command) {
-        pushOptimizedCommand();
-        optimizedCommandsStack.peek().add(command);
-    }
-
-    @Override
-    public void visit(MoveCommand command) {
-        pushOptimizedCommand();
-        optimizedCommandsStack.peek().add(command);
-    }
-
 }
