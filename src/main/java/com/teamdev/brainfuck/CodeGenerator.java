@@ -18,28 +18,34 @@ public class CodeGenerator {
         return code;
     }
 
+    public void addBlock(String text){
+        code += String.format("%s%s{\r\n", getTabs(), text);
+        addTab();
+    }
+
+    public void closeBlock(){
+        removeTab();
+        code += String.format("%s}\r\n", getTabs());
+    }
+
     public void addCommand(String command){
         code += String.format("%s%s;\r\n", getTabs(), command );
     }
 
     public void openCycle(String command){
-        code += String.format("%swhile(%s){\r\n", getTabs(), command );
-        tabsCount++;
+        addBlock(String.format("while(%s)\r\n", command ));
     }
 
     public void closeCycle(){
-        tabsCount--;
-        code += String.format("%s}\r\n", getTabs());
+        closeBlock();
     }
 
-    public void openFunction(String name){
-        code += String.format("%sfunction %s(){\r\n", getTabs(), name );
+    public void addTab(){
         tabsCount++;
     }
 
-    public void closeFunction(){
+    public void removeTab(){
         tabsCount--;
-        code += String.format("%s}\r\n", getTabs());
     }
 
 }

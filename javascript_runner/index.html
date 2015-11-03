@@ -1,20 +1,15 @@
 <html>
 <head>
 
+<script src="jquery-2.1.4.min.js"></script>
+<script src="jquery.terminal-0.8.8.js"></script>
 <script src="brainfuck.js"></script>
-<script>
-function test(){
-	var text = payload();
-	console.log(text);
-	alert(text);
-	document.getElementById('text').innerHTML = text;
-}
-</script>
+<script src="main.js"></script>
+<link href="jquery.terminal.css" rel="stylesheet"/>
 
 </head>
 <body>
-
-<button onclick="test()">Click Me</button><br><br>
+<div id="console"></div>
 <div id="text"></div>
 
 </body>

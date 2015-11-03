@@ -5,17 +5,20 @@ public class JavaScriptCompilerVisitor implements CommandVisitor {
     private CodeGenerator codeGenerator = new CodeGenerator();
 
     public JavaScriptCompilerVisitor(){
-        codeGenerator.openFunction("payload");
-
+        codeGenerator.addBlock("function BrainfuckCode(resultCallBack)");
+        codeGenerator.addBlock("return ");
+        codeGenerator.addBlock("run : function()");
         codeGenerator.addCommand("var result = ''");
-        codeGenerator.addCommand("var arr = []");
-        codeGenerator.addCommand("for(var i=0; i<30000; i++)arr[i]=0");
+        codeGenerator.addCommand("var memory = Array.apply(null, new Array(30000)).map(Number.prototype.valueOf,0);");
         codeGenerator.addCommand("var pointer = 0");
     }
 
     public String getJavaScript(){
-        codeGenerator.addCommand("return result");
-        codeGenerator.closeFunction();
+        codeGenerator.addCommand("resultCallBack(result)");
+        codeGenerator.closeBlock();
+        codeGenerator.closeBlock();
+        codeGenerator.closeBlock();
+
         return codeGenerator.getCode();
     }
 
@@ -31,22 +34,22 @@ public class JavaScriptCompilerVisitor implements CommandVisitor {
 
     @Override
     public void visit(IncrementCommand command) {
-        codeGenerator.addCommand("arr[pointer]++");
+        codeGenerator.addCommand("memory[pointer]++");
     }
 
     @Override
     public void visit(DecrementCommand command) {
-        codeGenerator.addCommand("arr[pointer]--");
+        codeGenerator.addCommand("memory[pointer]--");
     }
 
     @Override
     public void visit(PrintCommand command) {
-        codeGenerator.addCommand("result += String.fromCharCode(arr[pointer])");
+        codeGenerator.addCommand("result += String.fromCharCode(memory[pointer])");
     }
 
     @Override
     public void visit(LoopCommand command) {
-        codeGenerator.openCycle("arr[pointer]");
+        codeGenerator.openCycle("memory[pointer]");
         for (Command innerCommand : command.getInnerCommands()) {
             innerCommand.accept(this);
         }
@@ -55,7 +58,7 @@ public class JavaScriptCompilerVisitor implements CommandVisitor {
 
     @Override
     public void visit(AddCommand command) {
-        codeGenerator.addCommand("arr[pointer] += " + Integer.toString(command.getAddNum()));
+        codeGenerator.addCommand("memory[pointer] += " + Integer.toString(command.getAddNum()));
     }
 
     @Override

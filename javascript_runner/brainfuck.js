@@ -1,67 +1,73 @@
-function payload(){
-	var result = '';
-	var arr = [];
-	for(var i=0; i<30000; i++)arr[i]=0;
-	var pointer = 0;
-	arr[pointer] += 8;
-	while(arr[pointer]){
-		pointer++;
-		arr[pointer] += 4;
-		while(arr[pointer]){
+function BrainfuckCode(resultCallBack){
+	return {
+		run : function(){
+			var result = '';
+			var memory = Array.apply(null, new Array(30000)).map(Number.prototype.valueOf,0);;
+			var pointer = 0;
+			memory[pointer] += 8;
+			while(memory[pointer])
+{
+				pointer++;
+				memory[pointer] += 4;
+				while(memory[pointer])
+{
+					pointer++;
+					memory[pointer] += 2;
+					pointer++;
+					memory[pointer] += 3;
+					pointer++;
+					memory[pointer] += 3;
+					pointer++;
+					memory[pointer]++;
+					pointer += -4;
+					memory[pointer]--;
+				}
+				pointer++;
+				memory[pointer]++;
+				pointer++;
+				memory[pointer]++;
+				pointer++;
+				memory[pointer]--;
+				pointer += 2;
+				memory[pointer]++;
+				while(memory[pointer])
+{
+					pointer--;
+				}
+				pointer--;
+				memory[pointer]--;
+			}
+			pointer += 2;
+			result += String.fromCharCode(memory[pointer]);
 			pointer++;
-			arr[pointer] += 2;
-			pointer++;
-			arr[pointer] += 3;
-			pointer++;
-			arr[pointer] += 3;
-			pointer++;
-			arr[pointer]++;
-			pointer += -4;
-			arr[pointer]--;
-		}
-		pointer++;
-		arr[pointer]++;
-		pointer++;
-		arr[pointer]++;
-		pointer++;
-		arr[pointer]--;
-		pointer += 2;
-		arr[pointer]++;
-		while(arr[pointer]){
+			memory[pointer] += -3;
+			result += String.fromCharCode(memory[pointer]);
+			memory[pointer] += 7;
+			result += String.fromCharCode(memory[pointer]);
+			result += String.fromCharCode(memory[pointer]);
+			memory[pointer] += 3;
+			result += String.fromCharCode(memory[pointer]);
+			pointer += 2;
+			result += String.fromCharCode(memory[pointer]);
 			pointer--;
+			memory[pointer]--;
+			result += String.fromCharCode(memory[pointer]);
+			pointer--;
+			result += String.fromCharCode(memory[pointer]);
+			memory[pointer] += 3;
+			result += String.fromCharCode(memory[pointer]);
+			memory[pointer] += -6;
+			result += String.fromCharCode(memory[pointer]);
+			memory[pointer] += -8;
+			result += String.fromCharCode(memory[pointer]);
+			pointer += 2;
+			memory[pointer]++;
+			result += String.fromCharCode(memory[pointer]);
+			pointer++;
+			memory[pointer] += 2;
+			result += String.fromCharCode(memory[pointer]);
+			resultCallBack(result);
 		}
-		pointer--;
-		arr[pointer]--;
 	}
-	pointer += 2;
-	result += String.fromCharCode(arr[pointer]);
-	pointer++;
-	arr[pointer] += -3;
-	result += String.fromCharCode(arr[pointer]);
-	arr[pointer] += 7;
-	result += String.fromCharCode(arr[pointer]);
-	result += String.fromCharCode(arr[pointer]);
-	arr[pointer] += 3;
-	result += String.fromCharCode(arr[pointer]);
-	pointer += 2;
-	result += String.fromCharCode(arr[pointer]);
-	pointer--;
-	arr[pointer]--;
-	result += String.fromCharCode(arr[pointer]);
-	pointer--;
-	result += String.fromCharCode(arr[pointer]);
-	arr[pointer] += 3;
-	result += String.fromCharCode(arr[pointer]);
-	arr[pointer] += -6;
-	result += String.fromCharCode(arr[pointer]);
-	arr[pointer] += -8;
-	result += String.fromCharCode(arr[pointer]);
-	pointer += 2;
-	arr[pointer]++;
-	result += String.fromCharCode(arr[pointer]);
-	pointer++;
-	arr[pointer] += 2;
-	result += String.fromCharCode(arr[pointer]);
-	return result;
 }
 
