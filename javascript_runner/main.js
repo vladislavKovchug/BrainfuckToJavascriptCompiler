@@ -11,15 +11,21 @@ type 'run' to start \r\n\
 ";
 
 $(function($) {
-    $('#console').terminal(function(command, term) {	
+	$('#console').terminal(function(command, term) {
+		var echoBuffer = "";
 		if (command == 'run') {
 			term.echo("Executing...");
-			BrainfuckCode(function(value){
-				term.echo("Result:");
-				term.echo(value);
+			BrainfuckCode({
+				print: function(char) {
+					echoBuffer += String.fromCharCode(char);
+				},
+				result: function(value){
+					term.echo(echoBuffer);
+					term.echo("Brainfuck code terminated.");
+				}
 			}).run();
 		} else {
 			term.echo("type 'run' to start");
 		}
-}, { prompt: '>', name: 'test', greetings: brainfuckLogo });
+	}, { prompt: '>', name: 'test', greetings: brainfuckLogo });
 });

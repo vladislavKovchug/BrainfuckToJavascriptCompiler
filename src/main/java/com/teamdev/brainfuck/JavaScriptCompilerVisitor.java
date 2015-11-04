@@ -5,16 +5,17 @@ public class JavaScriptCompilerVisitor implements CommandVisitor {
     private CodeGenerator codeGenerator = new CodeGenerator();
 
     public JavaScriptCompilerVisitor(){
-        codeGenerator.addBlock("function BrainfuckCode(resultCallBack)");
+        codeGenerator.addBlock("function BrainfuckCode(params)");
+        codeGenerator.addCommand("var printCallBack = params.print ? params.print : function(){}");
+        codeGenerator.addCommand("var resultCallBack = params.result ? params.result : function(){}");
         codeGenerator.addBlock("return ");
         codeGenerator.addBlock("run : function()");
-        codeGenerator.addCommand("var result = ''");
         codeGenerator.addCommand("var memory = Array.apply(null, new Array(30000)).map(Number.prototype.valueOf,0);");
         codeGenerator.addCommand("var pointer = 0");
     }
 
     public String getJavaScript(){
-        codeGenerator.addCommand("resultCallBack(result)");
+        codeGenerator.addCommand("resultCallBack()");
         codeGenerator.closeBlock();
         codeGenerator.closeBlock();
         codeGenerator.closeBlock();
@@ -44,7 +45,7 @@ public class JavaScriptCompilerVisitor implements CommandVisitor {
 
     @Override
     public void visit(PrintCommand command) {
-        codeGenerator.addCommand("result += String.fromCharCode(memory[pointer])");
+        codeGenerator.addCommand("printCallBack(memory[pointer])");
     }
 
     @Override

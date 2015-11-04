@@ -1,7 +1,8 @@
-function BrainfuckCode(resultCallBack){
+function BrainfuckCode(params){
+	var printCallBack = params.print ? params.print : function(){};
+	var resultCallBack = params.result ? params.result : function(){};
 	return {
 		run : function(){
-			var result = '';
 			var memory = Array.apply(null, new Array(30000)).map(Number.prototype.valueOf,0);;
 			var pointer = 0;
 			memory[pointer] += 8;
@@ -38,35 +39,35 @@ function BrainfuckCode(resultCallBack){
 				memory[pointer]--;
 			}
 			pointer += 2;
-			result += String.fromCharCode(memory[pointer]);
+			printCallBack(memory[pointer]);
 			pointer++;
 			memory[pointer] += -3;
-			result += String.fromCharCode(memory[pointer]);
+			printCallBack(memory[pointer]);
 			memory[pointer] += 7;
-			result += String.fromCharCode(memory[pointer]);
-			result += String.fromCharCode(memory[pointer]);
+			printCallBack(memory[pointer]);
+			printCallBack(memory[pointer]);
 			memory[pointer] += 3;
-			result += String.fromCharCode(memory[pointer]);
+			printCallBack(memory[pointer]);
 			pointer += 2;
-			result += String.fromCharCode(memory[pointer]);
+			printCallBack(memory[pointer]);
 			pointer--;
 			memory[pointer]--;
-			result += String.fromCharCode(memory[pointer]);
+			printCallBack(memory[pointer]);
 			pointer--;
-			result += String.fromCharCode(memory[pointer]);
+			printCallBack(memory[pointer]);
 			memory[pointer] += 3;
-			result += String.fromCharCode(memory[pointer]);
+			printCallBack(memory[pointer]);
 			memory[pointer] += -6;
-			result += String.fromCharCode(memory[pointer]);
+			printCallBack(memory[pointer]);
 			memory[pointer] += -8;
-			result += String.fromCharCode(memory[pointer]);
+			printCallBack(memory[pointer]);
 			pointer += 2;
 			memory[pointer]++;
-			result += String.fromCharCode(memory[pointer]);
+			printCallBack(memory[pointer]);
 			pointer++;
 			memory[pointer] += 2;
-			result += String.fromCharCode(memory[pointer]);
-			resultCallBack(result);
+			printCallBack(memory[pointer]);
+			resultCallBack();
 		}
 	}
 }
